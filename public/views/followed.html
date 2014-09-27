@@ -1,0 +1,89 @@
+<div class="container-fluid">
+
+  <!-- Filters -->
+  <div class="well well-sm">
+    <form class="form-inline" role="form">
+      <label>Filter by: </label>
+      <div class="form-group">
+        <label for="filterNameInput">Name</label>
+        <input type="text" id="filterNameInput" class="form-control input-sm" ng-model="filterName" />
+      </div>
+      <div class="form-group">
+        <label for="filterGenreSelect">Genre</label>
+        <select id="filterGenreSelect" class="form-control input-sm" ng-model="filterGenre" ng-options="g.id as g.name for g in genres">
+          <option value="">All</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Show status</label>
+        <label class="radio-inline">
+          <input type="radio" ng-model="filterStatus" value="" ng-checked="true"> All
+        </label>
+        <label class="radio-inline">
+          <input type="radio" ng-model="filterStatus" value="Ended"> Ended
+        </label>
+        <label class="radio-inline">
+          <input type="radio" ng-model="filterStatus" value="Returning series"> Returning
+        </label>
+      </div>
+      <button class="form-control input-sm pull-right" ng-click="resetFilters()">Reset filters</button>
+    </form>
+  </div>
+
+  <h1>Followed shows</h1>
+
+  <div class="alert alert-info" ng-if="followed.length == 0">
+    <p><a ui-sref="explore" class="alert-link">Explore</a> and start to follow your favourite shows.</p>
+  </div>
+
+  <div class="row">
+    <div class="show-card followed col-xs-6 col-sm-4 col-md-3 col-lg-2" ng-repeat="fs in followed | filter:followedFilter | orderBy:fs.show.name">
+      <div class="show-thumbnail">
+        <div class="stripe" ng-cloak ng-class="getStripeClass(fs)">{{fs.status == 2 ? 'Completed' : 'New'}}</div>
+        <img ng-src="{{getPosterSrc(fs.show.posterPath)}}" data-fallback-src>
+        <div ng-show="!settingProgression" class="overlay">
+          <div class="navigation">
+            <button type="button" class="btn btn-info btn-block btn-xs" ng-click="setProgression(fs, { season : fs.season, episode : fs.episode})">
+              Set {{fs | episodeLabel}} watched!
+            </button>
+            <button type="button" class="btn btn-default btn-block btn-xs" ng-click="getAllEpisodeForProgression(fs)">Set progression</button>
+            <button type="button" class="btn btn-danger btn-block btn-xs" ng-click="unfollowShow(fs)">Unfollow</button>
+          </div>
+          <a ui-sref="details({ id: fs.show._id })">
+            <span class="glyphicon glyphicon-search"></span>
+          </a>
+        </div>
+        <div ng-show="settingProgression && fs.settingProgression" class="show-progression">
+          <button type="button" class="close" ng-click="setProgression(fs, null, true)">X</button>
+          <h5>Set progression</h5>
+          <div ng-show="loadingEpisodes" class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+          <div ng-show="!loadingEpisodes">
+            <div class="form-group">
+              <select id="setProgressionSelect" class="form-control input-sm" ng-model="$parent.progressionEp"
+                      ng-options="e as e|episodeLabel group by ('Season '+e.season) for e in allEp">
+                <option value="">Not yet started</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <button type="button" class="btn btn-primary btn-block btn-sm" ng-click="setProgression(fs, progressionEp)">Ok</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="show-labels">
+        <h5>{{fs.show.name | uppercase}}</h5>
+        <h5 class="text-muted">
+          <span ng-if="fs.status == null">Loading next episode...</span>
+          <span ng-if="fs.status == 2">Completed!</span>
+          <span ng-if="fs.status < 2">{{fs | episodeLabel}}</span>
+          <span ng-if="fs.status == 1">({{fs.airDate | fromNow}})</span>
+        </h5>
+      </div>
+    </div>
+  </div>
+</div>
+

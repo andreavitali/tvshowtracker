@@ -1,0 +1,81 @@
+﻿<!-- Summary panel -->
+<div class="container">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="media">
+
+        <!-- Image and follow button -->
+        <div class="pull-left">
+          <img class="media-object img-rounded" ng-src="{{getPosterSrc(show.poster_path)}}" data-fallback-src>
+          <div class="text-center">
+            <button ng-if="!followedShow" ng-click="followShow()" class="btn btn-block btn-success">Follow</button>
+            <button ng-if="followedShow" ng-click="unfollowShow()" class="btn btn-block btn-danger">Unfollow</button>
+            <button ng-if="!currentUser" ng-click="login()" class="btn btn-block btn-warning">Login to follow</button>
+          </div>
+        </div>
+
+        <!-- Show data -->
+        <div class="media-body">
+          <h2 class="media-heading">
+            {{show.name | uppercase}}
+          </h2>
+          <div class="genre-container">
+            <a ui-sref="explore({genre:g.id})" ng-repeat="g in show.genres">
+              <span class="genre label label-default">{{g.name}}</span>
+            </a>
+          </div>
+          <p>{{show.overview}}</p>
+          <div class="show-note-wrapper">
+            <div class="row">
+              <div class="col-md-6">
+                <ul class="note">
+                  <li><strong>Premiered: </strong>{{show.first_air_date | date:'MMM yyyy'}}</li>
+                  <li><strong>Rating: </strong>{{show.vote_average | number:1}}</li>
+                  <li><strong>Seasons: </strong>{{show.number_of_seasons}}</li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <ul class="note">
+                  <li ng-show="show.status === 'Ended'" class="text-danger">
+                    <span class="glyphicon glyphicon-remove"></span><strong>{{show.status}}</strong>
+                  </li>
+                  <li ng-show="show.status !== 'Ended'" class="text-success">
+                    <span class="glyphicon glyphicon-ok"></span><strong>{{show.status}}</strong>
+                  </li>
+                  <li>
+                    <a ng-href="{{show.homepage}}">
+                      <span class="glyphicon glyphicon-home"></span>
+                      <strong>Homepage</strong>
+                    </a>
+                  </li>
+                  <li><strong>Episodes: </strong>{{show.number_of_episodes}}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Seasons selector -->
+  <div class="center-block">
+    <strong class="pull-left" style="padding:10px">Seasons</strong>
+    <ul class="nav nav-pills">
+      <li ng-repeat="season in show.seasons" ng-show="season.season_number > 0" ui-sref-active="active">
+        <a ui-sref="details.season({ season_number: season.season_number })" ui-sref-opts="{location : false}">{{season.season_number}}</a>
+      </li>
+      <li ng-show="show.seasons[0].season_number === 0" ui-sref-active="active">
+        <a ui-sref="details.season({ season_number: 0 })" ui-sref-opts="{location : false}">Extra</a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Season details -->
+  <div class="panel">
+    <div class="panel-body">
+      <div ui-view></div>
+    </div>
+  </div>
+</div>

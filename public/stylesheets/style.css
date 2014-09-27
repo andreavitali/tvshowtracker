@@ -1,0 +1,305 @@
+﻿/*/**********************************
+    Custom Bootstrap Styles  
+***********************************/
+html {
+    overflow-y: scroll;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+.glyphicon {
+    margin-right: .3em;
+}
+
+.navbar-brand {
+    padding: 15px !important;
+    -moz-transition: 0.25s all;
+    -o-transition: 0.25s all;
+    -webkit-transition: 0.25s all;
+    transition: 0.25s all;
+}
+
+@media (min-width: 768px) {
+    .navbar-form .form-group {
+        margin-top: 4px;
+    }
+}
+
+.navbar-default .navbar-text {
+    color: #aaa;
+}
+
+.center-form {
+    width: 330px;
+    margin: 10% auto;
+}
+
+.media-object {
+    max-width: 300px;
+    margin-bottom: 10px;
+}
+
+.table > tbody > tr > td,
+.table > thead > tr > th {
+    padding: 4px;
+}
+
+.well .checkbox {
+    margin: 0;
+}
+
+.form-inline .form-group {
+    margin-left: 10px;
+}
+
+    .form-inline .form-group label:first-of-type {
+        margin-right: 5px;
+    }
+
+/************************
+    ngProgressLite    
+************************/
+
+.ngProgressLite {
+    pointer-events: none;
+}
+
+.ngProgressLiteBar {
+    background: #0ce3ac;
+    position: fixed;
+    z-index: 99999;
+    top: 0;
+    left: 0;
+    height: 2px;
+}
+
+.ngProgressLite .ngProgressLiteBarShadow {
+    display: block;
+    position: absolute;
+    right: 0px;
+    width: 100px;
+    height: 100%;
+    box-shadow: 0 0 10px #0ce3ac, 0 0 5px #0ce3ac;
+    opacity: 1;
+    -webkit-transform: rotate(3deg) translate(0px, -4px);
+    -ms-transform: rotate(3deg) translate(0px, -4px);
+    -moz-transform: rotate(3deg) translate(0px, -4px);
+    -o-transform: rotate(3deg) translate(0px, -4px);
+    transform: rotate(3deg) translate(0px, -4px);
+}
+
+/************************
+    App styles    
+************************/
+
+/* Show note */
+.show-note-wrapper {
+    margin-top: 20px;
+    max-width: 380px;
+    padding: 5px;
+}
+
+    .show-note-wrapper .note {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+ul.note li {
+    line-height: 28px;
+    padding: 0 10px;
+    margin: 5px 0 0 0;
+    background-color: #464545;
+    border-radius: 3px;
+}
+
+    ul.note li > a {
+        color: #fff;
+    }
+
+        ul.note li > a:hover {
+            color: #0ce3ac;
+        }
+
+/* Show cards */
+.show-card {
+    margin-bottom: 20px;
+}
+
+    .show-card > .show-thumbnail {
+        width: 185px;
+        height: 272px;
+        position: relative;
+        overflow-y: hidden;
+        border-radius: 4px;
+        margin-bottom: 5px;
+        box-shadow: 0 1px 4px 1px rgba(0,0,0,.5);
+        z-index: 2;
+    }
+    
+        .show-card > .show-thumbnail > .stripe {
+            position: absolute;
+            top: 76px;
+            left: -24px;
+            width: 148px;
+            -webkit-transform: rotate(-45deg);
+            -o-transform: rotate(-45deg);
+            -ms-transform: rotate(-45deg);
+            -moz-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+            font-size: 14px;
+            text-transform: uppercase;
+            z-index: 1;
+            -webkit-transform-origin: 0 0;
+            -moz-transform-origin: 0 0;
+            -ms-transform-origin: 0 0;
+            -o-transform-origin: 0 0;
+            padding-top: 6px;
+            padding-bottom: 6px;
+            text-align: center;
+        }
+
+        .show-card > .show-thumbnail > img {
+            width: 185px;
+            min-height: 272px;
+        }
+
+        .show-card > .show-thumbnail > .overlay {
+            background: rgba(0,0,0,.7);
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            border-radius: 4px;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            -webkit-transition: all .25s ease;
+            -moz-transition: all .25s ease;
+            -o-transition: all .25s ease;
+            transition: all .25s ease;
+        }
+
+        .show-card > .show-thumbnail:hover > .overlay {
+            opacity: 1;
+        }
+
+        .show-card > .show-thumbnail > .overlay a {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            color: white;
+        }
+
+            .show-card > .show-thumbnail > .overlay a .glyphicon {
+                position: absolute;
+                font-size: 36px;
+                top: 50%;
+                left: 50%;
+                margin-left: -20px;
+                margin-top: -20px;
+                color: #fff;
+                width: 40px;
+                height: 40px;
+                line-height: 36px;
+            }
+
+        .show-card > .show-thumbnail > .overlay > .navigation {
+            padding: 5px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        .show-card > .show-thumbnail > .show-progression {
+            padding: 5px;
+            background-color: #303030;
+            border-radius: 3px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            z-index: 15;
+            text-align: center;
+        }
+        
+        .show-card > .show-thumbnail > .show-progression > .close {
+            position: relative;
+            top: -2px;
+            color: inherit;
+            font-size: 12px;
+            opacity: .2;
+        }
+
+    .show-card .show-labels {
+        margin-top: 2px;
+        margin-bottom: 2px;
+        overflow: hidden;
+        text-align: left;
+        width: 185px;
+    }
+
+        .show-card .show-labels > * {
+            text-shadow: 0 2px 2px rgba(0,0,0,.5);
+            margin: 0;
+            line-height: 1.5;
+            height: 25px;
+            overflow: hidden;
+            position: relative;
+        }
+
+    /* Show card animation */
+    .show-card.explore.ng-enter,
+    .show-card.explore.ng-leave {
+        -webkit-transition: 0.5s linear all;
+        -moz-transition: 0.5s linear all;
+        -o-transition: 0.5s linear all;
+        transition: 0.5s linear all;
+    }
+
+        .show-card.explore.ng-enter,
+        .show-card.explore.ng-leave.ng-leave-active {
+            opacity: 0;
+        }
+
+            .show-card.explore.ng-leave,
+            .show-card.explore.ng-enter.ng-enter-active {
+                opacity: 1;
+            }
+
+    .show-card.followed.ng-leave {
+        -moz-animation: flipOutY 0.7s;
+        -o-animation: flipOutY 0.7s;
+        -webkit-animation: flipOutY 0.7s;
+        animation: flipOutY 0.7s;
+    }
+
+/* Genres */
+.genre-container {
+    margin-bottom: 5px;
+}
+
+.label.genre {
+    margin-right: 2px;
+    font-size: 90% !important;
+    padding: 2px 5px;
+}
+
+/* Season details */
+.episode-details > .episode-actions .glyphicon {
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+    .episode-details > .episode-actions .glyphicon:hover,
+    .episode-details > .episode-actions .glyphicon.watched {
+        color: #0ce3ac;
+    }

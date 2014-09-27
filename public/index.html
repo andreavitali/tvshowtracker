@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TvShowTracker</title>
+  <link rel="icon" type="image/png" href="images/favicon.png" />  
+  
+  <link href="stylesheets/bootstrap.css" rel="stylesheet" />
+  <link href="stylesheets/animate.css" rel="stylesheet" />
+  <link href="stylesheets/style.css" rel="stylesheet" />
+  <link href="stylesheets/angular-toastr.css" rel="stylesheet" />
+  <link href="stylesheets/ngprogress-lite.css" rel="stylesheet" />
+  <link href="stylesheets/spinner.css" rel="stylesheet" />
+  <!--<link href="stylesheets/app.min.css" rel="stylesheet" />-->
+</head>
+
+<body ng-app="TvSeriesTracker">
+
+  <div class="navbar navbar-default navbar-static-top" role="navigation" ng-controller="NavbarCtrl">
+    <div class="container">
+      <div class="navbar-header">
+          <strong class="navbar-brand">TVShowTracker</strong>
+      </div>
+      <ul class="nav navbar-nav">
+        <li ui-sref-active="active"><a ui-sref="explore" ui-sref-opts="{reload: true, inherit:false}">Explore</a></li>
+        <li ui-sref-active="active" ng-if="currentUser"><a ui-sref="followed">Followed</a></li>
+      </ul>
+      <form class="navbar-form navbar-left" ng-submit="search()">
+          <input type="text" class="form-control" placeholder="Search" ng-model="searchName">
+      </form>
+      <ul class="nav navbar-nav pull-right" ng-if="!currentUser" ng-cloak>
+        <li ui-sref-active="active"><a ui-sref="login">Login</a></li>
+        <li ui-sref-active="active"><a ui-sref="signup">Sign up</a></li>
+      </ul>
+      <ul class="nav navbar-nav pull-right" ng-if="currentUser" ng-cloak>
+        <li class="navbar-text" ng-bind="currentUser.name"></li>
+        <li><a href="javascript:void(0)" ng-click="logout()">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div ui-view></div>
+
+  <!-- Scripts -->
+  <script src="vendor/jquery-1.9.0.min.js"></script>
+  <script src="vendor/angular.js"></script>
+  <script src="vendor/angular-ui-router.js"></script>
+  <script src="vendor/angular-animate.js"></script>
+  <script src="vendor/angular-toastr.js"></script>
+  <script src="vendor/angular-local-storage.min.js"></script>
+  <script src="vendor/ngprogress-lite.min.js"></script>
+  <script src="vendor/ng-infinite-scroll.js"></script>
+  <script src="vendor/moment.js"></script>
+  <script src="vendor/underscore-min.js"></script>
+
+  <script src="js/app.js"></script>
+  <script src="js/services/auth.js"></script>
+  <script src="js/services/shows.js"></script>
+  <script src="js/services/follow.js"></script>
+  <script src="js/controllers/explore.js"></script>
+  <script src="js/controllers/user.js"></script>
+  <script src="js/controllers/navbar.js"></script>
+  <script src="js/controllers/details.js"></script>
+  <script src="js/controllers/followed.js"></script>
+  <script src="js/directives.js"></script>
+  <script src="js/filters.js"></script>
+  
+  <!--<script src="vendor/vendor.min.js"></script>-->
+  <!--<script src="js/app.min.js"></script>-->
+
+</body>
+</html>

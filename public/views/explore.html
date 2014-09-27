@@ -1,0 +1,47 @@
+﻿<div class="container-fluid">
+
+  <!-- Genres -->
+  <div class="well well-sm clearfix">
+    <span>Search by genre: </span>
+    <a ui-sref="explore" ui-sref-opts="{reload: true, inherit:false}"><span class="genre label label-default">All</span></a>
+    <a ui-sref="explore({genre:g.id})" ui-sref-opts="{inherit:false}" ng-repeat="g in genres">
+      <span class="genre label label-default animated">{{g.name}}</span>
+    </a>
+    <div class="checkbox pull-right" ng-show="currentUser">
+      <label>
+        <input type="checkbox" ng-model="hideFollowedShows"> Hide followed shows
+      </label>
+    </div>
+  </div>
+
+  <!-- Title -->
+  <h1>{{title}}<em>{{searchParameter}}</em></h1>
+
+  <!-- Warnings -->
+  <div class="alert alert-warning" ng-if="logRequiredAlert">
+    <p>You need to be logged in to follow a show. <a ui-sref="login" class="alert-link">Login</a> or <a ui-sref="signup" class="alert-link">Sign up</a>.</p>
+  </div>
+
+  <!-- Show cards -->
+  <div class="row" infinite-scroll="nextPage()" infinite-scroll-distance="1">
+    <div class="show-card explore col-xs-6 col-sm-4 col-md-3 col-lg-2" ng-repeat="show in shows | filter:hideFollowedFilter">
+      <div class="show-thumbnail">
+        <img ng-src="{{getPosterSrc(show.poster_path)}}">
+        <div class="overlay">
+          <div class="navigation" ng-if="currentUser">
+            <button type="button" class="btn btn-success btn-block btn-xs" ng-if="!isShowFollowed(show.id)" ng-click="followShow(show)">
+              <span class="glyphicon glyphicon-plus"></span>Follow
+            </button>
+          </div>
+          <a ui-sref="details({ id: show.id })">
+            <span class="glyphicon glyphicon-search"></span>
+          </a>
+        </div>
+      </div>
+      <div class="show-labels">
+        <h5>{{show.name | uppercase}}</h5>
+      </div>
+    </div>
+  </div>
+
+</div>
