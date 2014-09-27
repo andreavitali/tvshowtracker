@@ -5,7 +5,7 @@ function ($scope, $state, Shows, Follow, _, moment, genres, followedShows) {
     $scope.genres = genres;
     $scope.followed = followedShows.data;
     $scope.settingProgression = false;
-    $scope.progressionEp;
+    $scope.hideCompleted = true;
 
     // Public functions
     $scope.getPosterSrc = function (posterPath) {
@@ -53,6 +53,7 @@ function ($scope, $state, Shows, Follow, _, moment, genres, followedShows) {
                     fs.season = result.season;
                     fs.airDate = result.airDate;
                     fs.status = result.status;
+                    fs.settingProgression = false;
                 });
         };
     };
@@ -63,6 +64,9 @@ function ($scope, $state, Shows, Follow, _, moment, genres, followedShows) {
     $scope.filterStatus;
 
     $scope.followedFilter = function (fs) {
+        if($scope.hideCompleted && fs.show.status === "Ended" && fs.status === 2)
+            return false;
+        
         if ($scope.filterName && $scope.filterName.length > 1 && $scope.filterGenre && $scope.filterStatus)
             return fs.show.name.toUpperCase().indexOf($scope.filterName.toUpperCase()) > -1
                 && _.contains(fs.show.genres, $scope.filterGenre)

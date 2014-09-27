@@ -23,7 +23,12 @@
           <input type="radio" ng-model="filterStatus" value="Ended"> Ended
         </label>
         <label class="radio-inline">
-          <input type="radio" ng-model="filterStatus" value="Returning series"> Returning
+          <input type="radio" ng-model="filterStatus" value="Returning Series"> Returning
+        </label>
+      </div>
+      <div class="form-group">
+        <label class="checkbox-inline">
+          <input type="checkbox" ng-model="hideCompleted"> Hide completed and ended shows
         </label>
       </div>
       <button class="form-control input-sm pull-right" ng-click="resetFilters()">Reset filters</button>
