@@ -42,7 +42,8 @@
   </div>
 
   <div class="row">
-    <div class="show-card followed col-xs-6 col-sm-4 col-md-3 col-lg-2" ng-repeat="fs in followed | filter:followedFilter | orderBy:fs.show.name">
+    <div class="show-card followed col-xs-6 col-sm-4 col-md-3 col-lg-2" ng-show="([fs] | filter:followedFilter).length > 0"
+         ng-repeat="fs in followed | orderBy:'show.name'">
       <div class="show-thumbnail">
         <div class="stripe" ng-cloak ng-class="getStripeClass(fs)">{{fs.status == 2 ? 'Completed' : 'New'}}</div>
         <img ng-src="{{getPosterSrc(fs.show.posterPath)}}" data-fallback-src>

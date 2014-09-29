@@ -275,7 +275,7 @@ ul.note li {
                 opacity: 1;
             }
 
-    .show-card.followed.ng-leave {
+    .show-card.followed.ng-hide {
         -moz-animation: flipOutY 0.7s;
         -o-animation: flipOutY 0.7s;
         -webkit-animation: flipOutY 0.7s;

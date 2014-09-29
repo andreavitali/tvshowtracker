@@ -53,7 +53,7 @@ function ($scope, $state, Shows, Follow, _, moment, genres, followedShows) {
                     fs.season = result.season;
                     fs.airDate = result.airDate;
                     fs.status = result.status;
-                    fs.settingProgression = false;
+                    //fs.settingProgression = false;
                 });
         };
     };
