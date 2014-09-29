@@ -160,8 +160,10 @@ exports.dailyUpdate = function() {
         		                if (Date.now() <= new Date(nextEp.air_date)) {
         		                    // update all followed shows with status 2 (up-to-date)
         		                    var nextEpToWatch = { show: fs._id, season: season.season_number, episode: nextEp.episode_number, airDate: nextEp.air_date, status : 0 };
-        		                    console.log("   - New episode for " + fs._id + " - " + show.name + " (S" + season.season_number + "E" + nextEp.episode_number+")");
-        		                    db.Users.update({"followed.show" : fs._id, "followed.status" : 2},{$set : { "followed.$":nextEpToWatch}}, {multi:true}, errCb);
+        		                    db.Users.update({"followed": {$elemMatch: {"show":fs._id, "status":2}}}, {$set : { "followed.$":nextEpToWatch}}, {multi:true}, function(err,num){
+        		                        if(err) console.error(err);
+        		                        console.log("   - Updated " + num + " users for show " + fs._id + " - " + show.name + " ( new ep: S" + season.season_number + "E" + nextEp.episode_number+")");
+        		                    });
         		                }
     		                }
     		            },

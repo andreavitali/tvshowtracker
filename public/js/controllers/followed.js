@@ -34,7 +34,8 @@ function ($scope, $state, Shows, Follow, _, moment, genres, followedShows) {
             $scope.loadingEpisodes = true;
             Shows.getAllEpisodes(fs.show._id, true).then(function (result) {
                 $scope.allEp = result;
-                $scope.progressionEp = _.find(result, function (e) { return e.season == fs.season && e.episode == fs.episode });
+                var next = _.find(result, function (e) { return e.season == fs.season && e.episode == fs.episode });
+                $scope.progressionEp = next || $scope.allEp[$scope.allEp.length-1];
                 $scope.loadingEpisodes = false;
             });
         }
@@ -53,7 +54,7 @@ function ($scope, $state, Shows, Follow, _, moment, genres, followedShows) {
                     fs.season = result.season;
                     fs.airDate = result.airDate;
                     fs.status = result.status;
-                    //fs.settingProgression = false;
+                    fs.settingProgression = false;
                 });
         };
     };
