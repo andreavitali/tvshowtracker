@@ -141,7 +141,7 @@ exports.dailyUpdate = function() {
 	console.log("Daily shows update " + moment().format("L"));
 	var errCb = function(error) { if(error) console.error(error); };
 	
-	var q = db.Shows.find();
+	var q = db.Shows.find({status:{"$ne":"Ended"}});
 	q.exec(function(err,followedShows){
 		if(err) return errCb(err);
 		_.each(followedShows, function(fs) {
@@ -155,12 +155,14 @@ exports.dailyUpdate = function() {
     		        shows.getSeasonDetails(
     		            {params: {id:fs._id, number:show.number_of_seasons}},
     		            function(season){
-    		                var nextEp = season.episodes[fs.season === season.season_number ? fs.episode : 0];
-    		                if (Date.now() <= new Date(nextEp.air_date)) {
-    		                    // update all followed shows with status 2 (up-to-date)
-    		                    var nextEpToWatch = { show: fs._id, season: season.season_number, episode: nextEp.episode_number, airDate: nextEp.air_date, status : 0 };
-    		                    console.log("   - New episode for " +show.name + " (S" + season.season_number + "E" + nextEp.episode_number+")");
-    		                    db.Users.update({"followed.show" : fs._id, "followed.status" : 2},{$set : { "followed.$":nextEpToWatch}}, {multi:true}, errCb);
+    		                if(season.episodes.length > 0){
+        		                var nextEp = season.episodes[fs.season === season.season_number ? fs.episode : 0];
+        		                if (Date.now() <= new Date(nextEp.air_date)) {
+        		                    // update all followed shows with status 2 (up-to-date)
+        		                    var nextEpToWatch = { show: fs._id, season: season.season_number, episode: nextEp.episode_number, airDate: nextEp.air_date, status : 0 };
+        		                    console.log("   - New episode for " + fs._id + " - " + show.name + " (S" + season.season_number + "E" + nextEp.episode_number+")");
+        		                    db.Users.update({"followed.show" : fs._id, "followed.status" : 2},{$set : { "followed.$":nextEpToWatch}}, {multi:true}, errCb);
+        		                }
     		                }
     		            },
     		            errCb);
