@@ -3,7 +3,8 @@ TvSeriesTracker
 **Yet another TV series tracker application**
 
 I realized this project to train in Node.js/AngularJS applications.
-You can browse TV shows, searching by name or genre and then make your personal list of followed shows. I used [TheMovieDB API] to get shows informations.
+You can browse TV shows, searching by name or genre and then make your personal list of followed shows.  
+I used [TheMovieDB API] to get shows informations.
 
 Technologies
 ----
@@ -16,7 +17,7 @@ This project uses a number of open source projects to work properly:
 
 Notes
 ----
-Replace data in file *config/config.js* with your own configurations.
+Replace data in file *config/config.js* with your own configurations.  
 All CSS and JS files can be concatenated and minified using [Gulp].
 
 Tech Improvements
