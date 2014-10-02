@@ -145,7 +145,7 @@ exports.dailyUpdate = function() {
 	// Update show with status = 1 if the next ep was aired yesterday
 	db.Users.update({"followed": {$elemMatch: {"status":1, "airDate":{"$lt":moment().startOf('day').toDate()}}}}, {$set : {"followed.$.status":0}}, {multi:true}, function(err,num){
 	    if(err) return errCb(err);
-	    if(num > 0) console.log("   - Changed " + num + " shows from status = 1 to status = 0");
+	    if(num > 0) console.log("Daily update: changed " + num + " shows from status = 1 to status = 0");
 	});
 	
 	// Get all followed shows with status = 1 or 2
@@ -163,6 +163,8 @@ exports.dailyUpdate = function() {
 	            shows.getById(
  		            {params: {id:showId}},
      		        function(show){
+     		            console.log("Daily update: checking " + show.name);
+     		            
      		            // update common data
          		        db.Shows.findByIdAndUpdate(showId, {$set : {status : show.status, posterPath : show.poster_path}}, errCb);
          		        
@@ -190,7 +192,7 @@ exports.dailyUpdate = function() {
                 		                    });
             		                    }
             		                    
-            		                    // if status = 2 update check for new ep
+            		                    // if status = 2 check for new ep
             		                    if((season.season_number > fs.season || nextEp.episode_number > fs.episode) && nextEp.air_date != null && Date.now() <= new Date(nextEp.air_date))
             		                    {
             		                        var nextEpToWatch = { show: showId, season: season.season_number, episode: nextEp.episode_number, airDate: nextEp.air_date, status : 1 };
