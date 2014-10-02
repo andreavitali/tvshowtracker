@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="row">
+    <div class="center-form panel">
+      <div class="panel-body">
+        <h2 class="text-center">Change password</h2>
+        <form role="form" ng-submit="changePassword()" name="changePwdForm">
+          <div class="form-group">
+            <label for="password">Old password</label>
+            <input class="form-control" type="password" name="oldPassword" ng-model="oldPassword" placeholder="Old password" required autofocus>
+          </div>
+          <div class="form-group">
+            <label for="password">New password</label>
+            <input class="form-control" type="password" name="newPassword" ng-model="newPassword" placeholder="New password" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">
+            Change
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
