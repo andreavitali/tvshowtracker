@@ -21,7 +21,7 @@ routes.followed = require('./routes/followed.js');
 
 // Express configuration
 var app = express();
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
 app.use(logger('dev', {skip: function (req, res) { return req.originalUrl.indexOf("/api/") === -1 }}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
