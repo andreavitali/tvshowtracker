@@ -44,6 +44,27 @@ exports.signup = function(req, res, next)
   });
 };
 
+exports.changePassword = function(req, res, next)
+{
+  var oldPassword = req.body.oldPassword || '';
+  var newPassword = req.body.newPassword || '';
+   db.Users.findOne({ _id: req.user.id }, function(err, user) {
+      if (!user) {
+        return res.status(401).send({ message: 'User not found' });
+      }
+      user.comparePassword(oldPassword, function(err, isMatch) {
+        if (!isMatch) {
+          return res.status(401).send({ message: 'Wrong old password' });
+        }
+        user.password = newPassword;
+        user.save(function(err) {
+          if (err) return next(err);
+          res.send(200);
+        });
+      });
+  });
+};
+
 exports.ensureAuthenticated = function(req, res, next)
 {
   if (!req.headers.authorization) {

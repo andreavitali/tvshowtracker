@@ -28,7 +28,11 @@ tvSeriesTrackerApp
         };
 
         factory.signUp = function (user) {
-             return $http.post('/api/auth/signup', user);
+            return $http.post('/api/auth/signup', user);
+        };
+        
+        factory.changePassword = function(changeData) {
+            return $http.post('/api/auth/changepassword', changeData);  
         };
 
         return factory;

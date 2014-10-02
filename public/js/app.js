@@ -74,6 +74,11 @@ tvSeriesTrackerApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvide
             templateUrl: 'views/signup.html',
             controller: 'UserCtrl'
         })
+        .state('changePassword', {
+            url: '/changePassword',
+            templateUrl: 'views/changePwd.html',
+            controller: 'UserCtrl'
+        })
         .state('details', {
             url: '/show/{id:[0-9]+}',
             templateUrl: 'views/details.html',

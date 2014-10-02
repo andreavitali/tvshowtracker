@@ -35,6 +35,7 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 
 app.post('/api/auth/login', routes.auth.login);
 app.post('/api/auth/signup', routes.auth.signup);
+app.post('/api/auth/changepassword', routes.auth.ensureAuthenticated, routes.auth.changePassword);
 
 app.post('/api/shows/search', routes.shows.search); // search shows
 app.get('/api/shows/configuration', routes.shows.configData); // base url for posters

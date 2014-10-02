@@ -8,7 +8,7 @@ tvSeriesTrackerApp.controller('UserCtrl', ['$scope', '$state', 'Auth', 'toastr',
         })
         .error(function (data, status) {
             toastr.clear();
-            toastr.error(data.message, 'Login Error');
+            toastr.error(data.message, 'Login error');
         });
     };
 
@@ -18,7 +18,17 @@ tvSeriesTrackerApp.controller('UserCtrl', ['$scope', '$state', 'Auth', 'toastr',
             $state.go('login');
         }, function (data, status) {
             toastr.clear();
-            toastr.error(data.message, 'Signup Error');
+            toastr.error(data.message, 'Signup error');
+        });
+    };
+    
+    $scope.changePassword = function() {
+        Auth.changePassword({oldPassword:$scope.oldPassword, newPassword:$scope.newPassword}).then(function (data) {
+            toastr.success('Your password has been changed successfully!');
+            $state.go('login');
+        }, function (data, status) {
+            toastr.clear();
+            toastr.error(data.message, 'Change password error');
         });
     };
 }]);
