@@ -6,9 +6,10 @@ tvSeriesTrackerApp.factory('Follow', ['_', '$http', '$rootScope', function (_, $
     
     // Get followed shows
     factory.getFollowedShows = function() {
-        return $rootScope.currentUser ? $http.get("/api/followed") : {};
+        return $http.get("/api/followed");
     };
     factory.getFollowedShowsId = function() {
+        if(!$rootScope.currentUser) return {};
         if (followedShowsId === null) {
             factory.getFollowedShows().success(function(shows) {
                 followedShowsId = _.map(shows, function(fs) { return fs.show._id; });

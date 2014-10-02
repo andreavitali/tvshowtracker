@@ -128,7 +128,8 @@ exports.setLastWatchedEpisode = function(req, res, next) {
                 		        }, showCb);
                 		    }
                 		    else {
-                		        db.Users.findOneAndUpdate({_id :req.user.id, "followed.show" : showId}, {$set : { "followed.$.status":2}}, showCb);
+                		        db.Users.findOneAndUpdate({_id :req.user.id, "followed.show" : showId}, 
+                		            {$set : {"followed.$.season":lastWatchedSeason, "followed.$.episode":lastWatchedEpisode, "followed.$.status":2}}, showCb);
                 		    }
                 		},errCb);
     		    }
@@ -141,35 +142,68 @@ exports.dailyUpdate = function() {
 	console.log("Daily shows update " + moment().format("L"));
 	var errCb = function(error) { if(error) console.error(error); };
 	
-	var q = db.Shows.find({status:{"$ne":"Ended"}});
-	q.exec(function(err,followedShows){
-		if(err) return errCb(err);
-		_.each(followedShows, function(fs) {
-		    // get details on every followed show
-		    shows.getById(
-		        {params: {id:fs._id}},
-    		    function(show){
-    		        // update common data
-    		        db.Shows.findByIdAndUpdate(fs._id, {$set : {status : show.status, posterPath : show.poster_path}}, errCb);
-    		        // check if there is a new episode
-    		        shows.getSeasonDetails(
-    		            {params: {id:fs._id, number:show.number_of_seasons}},
-    		            function(season){
-    		                if(season.episodes.length > 0){
-        		                var nextEp = season.episodes[fs.season === season.season_number ? fs.episode : 0];
-        		                if (Date.now() <= new Date(nextEp.air_date)) {
-        		                    // update all followed shows with status 2 (up-to-date)
-        		                    var nextEpToWatch = { show: fs._id, season: season.season_number, episode: nextEp.episode_number, airDate: nextEp.air_date, status : 0 };
-        		                    db.Users.update({"followed": {$elemMatch: {"show":fs._id, "status":2}}}, {$set : { "followed.$":nextEpToWatch}}, {multi:true}, function(err,num){
-        		                        if(err) console.error(err);
-        		                        console.log("   - Updated " + num + " users for show " + fs._id + " - " + show.name + " ( new ep: S" + season.season_number + "E" + nextEp.episode_number+")");
-        		                    });
-        		                }
-    		                }
-    		            },
-    		            errCb);
-                }, 
-                errCb);
-		});
+	// Update show with status = 1 if the next ep was aired yesterday
+	db.Users.update({"followed": {$elemMatch: {"status":1, "airDate":{"$lt":moment().startOf('day').toDate()}}}}, {$set : {"followed.$.status":0}}, {multi:true}, function(err,num){
+	    if(err) return errCb(err);
+	    if(num > 0) console.log("   - Changed " + num + " shows from status = 1 to status = 0");
+	});
+	
+	// Get all followed shows with status = 1 or 2
+	db.Users.aggregate({$unwind:"$followed"},{$match:{"followed.status":{$in:[1,2]}}},{$project:{"followed":1}}, function(err, followedShows)
+	{
+	    if(err) return errCb(err);
+	    
+	    // For all the shows not ended
+	    var fsIds = _.map(followedShows,function(fs) { return fs.followed.show; });
+	    db.Shows.find({_id : {"$in":fsIds}, status:{"$ne":"Ended"}}, {_id:1}).lean().exec(function(err, ids)
+	    {
+	        if(err) return errCb(err);
+	        _.each(_.pluck(ids,"_id"), function(showId) {
+	            // get details
+	            shows.getById(
+ 		            {params: {id:showId}},
+     		        function(show){
+     		            // update common data
+         		        db.Shows.findByIdAndUpdate(showId, {$set : {status : show.status, posterPath : show.poster_path}}, errCb);
+         		        
+            	        // check episode
+            	        var fs = _.find(followedShows, function(e) { return e.followed.show === showId; }).followed;
+            	        shows.getSeasonDetails(
+        		            {params: {id:showId, number:show.number_of_seasons}},
+        		            function(season){
+        		                if(season.episodes && season.episodes.length > 0){
+        		                    var nextEp;
+        		                    if(fs.status == 1) nextEp = season.episodes[fs.episode - 1];
+        		                    else {
+        		                        nextEp = season.episodes[fs.episode]; // same season
+        		                        if(!nextEp) nextEp = season.episodes[0]; // next season
+        		                    }
+        		                    
+        		                    if(nextEp)
+        		                    {
+            		                    // if status = 1 update airDate
+            		                    if(fs.status == 1) {
+                		                    db.Users.update({"followed": {$elemMatch: {"show":showId, "status":1, "airDate":{"$ne":nextEp.air_date}}}}, {$set: {"followed.$.airDate":nextEp.air_date}}, {multi:true},
+                		                    function(err,num){
+                		                        if(err) return errCb(err);
+                		                        if(num > 0) console.log("   - Updated airDate for show " + showId + " for " + num + " users (new date: " + nextEp.air_date + ")");
+                		                    });
+            		                    }
+            		                    
+            		                    // if status = 2 update check for new ep
+            		                    if((season.season_number > fs.season || nextEp.episode_number > fs.episode) && nextEp.air_date != null && Date.now() <= new Date(nextEp.air_date))
+            		                    {
+            		                        var nextEpToWatch = { show: showId, season: season.season_number, episode: nextEp.episode_number, airDate: nextEp.air_date, status : 1 };
+                		                    db.Users.update({"followed": {$elemMatch: {"show":showId, "status":2}}}, {$set : { "followed.$":nextEpToWatch}}, {multi:true}, function(err,num){
+                    		                    if(err) console.error(err);
+                    		                    if(num > 0) console.log("   - Updated " + num + " users for show " + showId + " - " + show.name + " ( new ep: S" + season.season_number + "E" + nextEp.episode_number+")");
+                    		                });
+            		                    }
+        		                    }
+            		            }
+        		            }, errCb);
+     		        }, errCb);
+	        });
+	    });
 	});
 };
