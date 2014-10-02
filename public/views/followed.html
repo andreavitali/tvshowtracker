@@ -1,40 +1,42 @@
 <div class="container-fluid">
 
   <!-- Filters -->
-  <div class="well well-sm">
-    <form class="form-inline" role="form">
-      <label>Filter by: </label>
-      <div class="form-group">
-        <label for="filterNameInput">Name</label>
-        <input type="text" id="filterNameInput" class="form-control input-sm" ng-model="filterName" />
-      </div>
-      <div class="form-group">
-        <label for="filterGenreSelect">Genre</label>
-        <select id="filterGenreSelect" class="form-control input-sm" ng-model="filterGenre" ng-options="g.id as g.name for g in genres">
-          <option value="">All</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Show status</label>
-        <label class="radio-inline">
-          <input type="radio" ng-model="filterStatus" value="" ng-checked="true"> All
-        </label>
-        <label class="radio-inline">
-          <input type="radio" ng-model="filterStatus" value="Ended"> Ended
-        </label>
-        <label class="radio-inline">
-          <input type="radio" ng-model="filterStatus" value="Returning Series"> Returning
-        </label>
-      </div>
-      <div class="form-group">
-        <label class="checkbox-inline">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <ul class="nav nav-pills h4">
+        <li ng-class="mainFilter == 'Started' ? 'active' : ''"><a href ng-click="changeMainFilter('Started')">Started <span class="badge">{{startedBadge}}</span></a></li>
+        <li ng-class="mainFilter == 'Upcoming' ? 'active' : ''"><a href ng-click="changeMainFilter('Upcoming')">Upcoming <span class="badge">{{upcomingBadge}}</span></a></li>
+        <li ng-class="mainFilter == 'All' ? 'active' : ''"><a href ng-click="changeMainFilter('All')">All <span class="badge">{{followed.length}}</span></span></a></li>
+      </ul>
+    </div>
+    <div class="panel-body">
+      <form class="form-inline" role="form">
+        <label>Filter by: </label>
+        <div class="form-group">
+          <label for="filterNameInput"> Name</label>
+          <input type="text" id="filterNameInput" class="form-control input-sm" ng-model="filterName" />
+          <label for="filterGenreSelect"> Genre</label>
+          <select id="filterGenreSelect" class="form-control input-sm" ng-model="filterGenre" ng-options="g.id as g.name for g in genres">
+            <option value="">All</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label> Show status</label>
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="showEnded"> Ended
+          </label>
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="showReturning"> Returning
+          </label>
+        </div>
+        <label class="checkbox-inline pull-right">
           <input type="checkbox" ng-model="hideCompleted"> Hide completed and ended shows
         </label>
-      </div>
-      <button class="form-control input-sm pull-right" ng-click="resetFilters()">Reset filters</button>
-    </form>
+        <!--<button class="form-control input-sm" ng-click="resetFilters()">Reset filters</button>-->
+      </form>
+    </div>
   </div>
-
+  
   <h1>Followed shows</h1>
 
   <div class="alert alert-info" ng-if="followed.length == 0">
@@ -43,7 +45,7 @@
 
   <div class="row">
     <div class="show-card followed col-xs-6 col-sm-4 col-md-3 col-lg-2" ng-show="([fs] | filter:followedFilter).length > 0"
-         ng-repeat="fs in followed | orderBy:'show.name'">
+         ng-repeat="fs in filterFollowed | orderBy:'show.name'">
       <div class="show-thumbnail">
         <div class="stripe" ng-cloak ng-class="getStripeClass(fs)">{{fs.status == 2 ? 'Completed' : 'New'}}</div>
         <img ng-src="{{getPosterSrc(fs.show.posterPath)}}" data-fallback-src>

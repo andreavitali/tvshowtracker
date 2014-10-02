@@ -8,8 +8,8 @@
         <div class="pull-left">
           <img class="media-object img-rounded" ng-src="{{getPosterSrc(show.poster_path)}}" data-fallback-src>
           <div class="text-center">
-            <button ng-if="!followedShow" ng-click="followShow()" class="btn btn-block btn-success">Follow</button>
-            <button ng-if="followedShow" ng-click="unfollowShow()" class="btn btn-block btn-danger">Unfollow</button>
+            <button ng-if="currentUser && !followedShow" ng-click="followShow()" class="btn btn-block btn-success">Follow</button>
+            <button ng-if="currentUser && followedShow" ng-click="unfollowShow()" class="btn btn-block btn-danger">Unfollow</button>
             <button ng-if="!currentUser" ng-click="login()" class="btn btn-block btn-warning">Login to follow</button>
           </div>
         </div>

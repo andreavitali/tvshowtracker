@@ -1,11 +1,23 @@
-tvSeriesTrackerApp.controller('FollowedCtrl', ['$scope', '$state', 'Shows', 'Follow', '_', 'moment', 'genres', 'followedShows',
-function ($scope, $state, Shows, Follow, _, moment, genres, followedShows) {
+tvSeriesTrackerApp.controller('FollowedCtrl', ['$scope', '$state', 'Shows', 'Follow', '_', 'moment', 'genres', 'followedShows', '$animate',
+function ($scope, $state, Shows, Follow, _, moment, genres, followedShows, $animate) {
 
     // Init data
     $scope.genres = genres;
     $scope.followed = followedShows.data;
     $scope.settingProgression = false;
     $scope.hideCompleted = true;
+    $scope.showEnded = true;
+    $scope.showReturning = true;
+    
+    // Update badges
+    var mainCount = _.countBy($scope.followed, function(fs){
+        if(fs.status === 0 && (fs.season === 1 ? fs.episode > 1 : true)) return 'started';
+        else if(fs.status === 1) return 'upcoming';
+        else return '';
+    });
+    $scope.startedBadge = mainCount.started;
+    $scope.upcomingBadge = mainCount.upcoming;
+    
 
     // Public functions
     $scope.getPosterSrc = function (posterPath) {
@@ -60,37 +72,44 @@ function ($scope, $state, Shows, Follow, _, moment, genres, followedShows) {
     };
 
     // Filters
-    $scope.filterName;
-    $scope.filterGenre;
-    $scope.filterStatus;
-
     $scope.followedFilter = function (fs) {
         if($scope.hideCompleted && fs.show.status === "Ended" && fs.status === 2)
             return false;
+            
+        // Main filter
+        var visibility = true;
+        if(!$scope.showEnded && !$scope.showReturning)
+            visibility = false;
+        else if(!($scope.showEnded && $scope.showReturning) && ($scope.showEnded || $scope.showReturning))
+            visibility = $scope.showEnded ? fs.show.status === "Ended" : fs.show.status === "Returning Series";
+            
+        if(visibility)
+        {
+            if($scope.filterName && $scope.filterName.length > 1 && $scope.filterGenre)
+                visibility = fs.show.name.toUpperCase().indexOf($scope.filterName.toUpperCase()) > -1 && _.contains(fs.show.genres, $scope.filterGenre);
+            else if ($scope.filterName && $scope.filterName.length > 1)
+                visibility = fs.show.name.toUpperCase().indexOf($scope.filterName.toUpperCase()) > -1;
+            else if ($scope.filterGenre)
+                visibility = _.contains(fs.show.genres, $scope.filterGenre);
+        }
         
-        if ($scope.filterName && $scope.filterName.length > 1 && $scope.filterGenre && $scope.filterStatus)
-            return fs.show.name.toUpperCase().indexOf($scope.filterName.toUpperCase()) > -1
-                && _.contains(fs.show.genres, $scope.filterGenre)
-                && fs.show.status == $scope.filterStatus;
-        else if ($scope.filterName && $scope.filterName.length > 1 && $scope.filterGenre)
-            return fs.show.name.toUpperCase().indexOf($scope.filterName.toUpperCase()) > -1 && _.contains(fs.show.genres, $scope.filterGenre);
-        else if ($scope.filterName && $scope.filterName.length > 1 && $scope.filterStatus)
-            return fs.show.name.toUpperCase().indexOf($scope.filterName.toUpperCase()) > -1 && fs.show.status == $scope.filterStatus;
-        else if ($scope.filterGenre && $scope.filterStatus)
-            return fs.show.name.toUpperCase().indexOf($scope.filterName.toUpperCase()) > -1 && fs.show.status == $scope.filterStatus;
-        else if ($scope.filterName && $scope.filterName.length > 1)
-            return fs.show.name.toUpperCase().indexOf($scope.filterName.toUpperCase()) > -1;
-        else if ($scope.filterGenre)
-            return _.contains(fs.show.genres, $scope.filterGenre);
-        else if ($scope.filterStatus)
-            return fs.show.status == $scope.filterStatus;
-        else
-            return true;
+        return visibility;
     };
-
-    $scope.resetFilters = function () {
-        $scope.filterName = "";
-        $scope.filterGenre = "";
-        $scope.filterStatus = "";
-    }
+    
+    $scope.changeMainFilter = function(filterValue) {
+        $scope.mainFilter = filterValue;
+        $animate.enabled(false);
+        $scope.filterFollowed = _.filter($scope.followed, function(fs) {
+            if($scope.mainFilter === "Started")
+                return fs.status === 0 && (fs.season === 1 ? fs.episode > 1 : true);
+            else if($scope.mainFilter === "Upcoming")
+                return fs.status === 1;
+            else
+                return true;
+        });
+        $animate.enabled(true);
+    };
+    
+    // Aplly first main filter
+    $scope.changeMainFilter("Started");
 }]);
