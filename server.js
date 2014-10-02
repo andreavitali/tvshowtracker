@@ -21,7 +21,8 @@ routes.followed = require('./routes/followed.js');
 
 // Express configuration
 var app = express();
-app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
+app.set('port', process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 8080);
+app.set('ip', process.env.OPENSHIFT_NODEJS_IP || process.env.IP || '127.0.0.1');
 app.use(logger('dev', {skip: function (req, res) { return req.originalUrl.indexOf("/api/") === -1 }}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -58,7 +59,7 @@ app.use(function(err, req, res, next) {
   res.send(500, { message: err.message });
 });
 
-app.listen(app.get('port'), function() {
+app.listen(app.get('port'), app.get('ip'), function() {
   console.log('Express server listening on port ' + app.get('port'));
 });
 
