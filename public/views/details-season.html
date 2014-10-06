@@ -1,4 +1,4 @@
-﻿<h3>{{season.name}}</h3>
+<h3>{{season.name}}</h3>
 
 <table class="table">
   <thead>
@@ -6,11 +6,12 @@
       <th class="col-md-2 text-muted"><strong>EPISODE</strong></th>
       <th class="col-md-8 text-muted"><strong>DESCRIPTION</strong></th>
       <th class="col-md-1 text-center text-muted"><strong>AIR DATE</strong></th>
-      <th ng-show="followedShow" class="col-md-1 text-center text-muted">WATCHED?</th>
+      <!--<th ng-show="followedShow" class="col-md-1 text-center text-muted">WATCHED?</th>-->
     </tr>
   </thead>
   <tbody class="small">
-    <tr ng-repeat="ep in season.episodes" class="episode-details" ng-class="isNextToWatchEpisode(season.season_number, ep.episode_number) ? 'active' : ''">
+    <!--<tr ng-repeat="ep in season.episodes" class="episode-details" ng-class="isNextToWatchEpisode(season.season_number, ep.episode_number) ? 'active' : ''">-->
+    <tr ng-repeat="ep in season.episodes" class="episode-details">
       <td>
         <strong>{{season.season_number}}x{{ep.episode_number | padding:'0':2}}</strong>
         <br />
