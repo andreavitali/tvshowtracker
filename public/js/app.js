@@ -82,7 +82,15 @@ tvSeriesTrackerApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvide
         .state('details', {
             url: '/show/{id:[0-9]+}',
             templateUrl: 'views/details.html',
-            controller: 'DetailsCtrl'
+            controller: 'DetailsCtrl',
+            resolve: {
+                followedShow: ['Follow','$stateParams', function (Follow, $stateParams) {
+                    return Follow.getFollowedShow($stateParams.id);
+                }],
+                show: ['Shows','$stateParams', function (Shows,$stateParams) {
+                    return Shows.getShow($stateParams.id);
+                }]
+            }
         })
         .state('details.season', {
             url: '/season/{season_number:[0-9]{2}}',

@@ -18,6 +18,17 @@ var updateFollowedShow = function(user_id, nextEpToWatch, isNew, cb)
     });
 };
 
+exports.getFollowedShow = function(req, res, next) {
+    var showId = req.params.id || '';
+    if(showId === '') return res.send(400);
+    db.Users.findOne({_id : req.user.id, 'followed.show':showId}, {'followed.$': 1}, function(e, doc) {
+        if(e) return next(e);
+        if(doc === null) return res.json(undefined);
+        return res.json(doc.followed[0]);
+    });
+};
+
+
 exports.getFollowedShows = function(req, res, next) {
     db.Users.findById(req.user.id).exec(function(e, user){
         if(e) return next(e);

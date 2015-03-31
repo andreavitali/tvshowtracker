@@ -1,13 +1,9 @@
-tvSeriesTrackerApp.controller('DetailsCtrl', ['$scope', '$state', '$stateParams', 'Shows', 'Follow', 'toastr', '_',
-function ($scope, $state, $stateParams, Shows, Follow, toastr, _) {
+tvSeriesTrackerApp.controller('DetailsCtrl', ['$scope', '$state', 'Shows', 'Follow', 'toastr', '_', 'show', 'followedShow',
+function ($scope, $state, Shows, Follow, toastr, _, show, followedShow) {
     
-    $scope.id = $stateParams.id;
-    Shows.getShow($scope.id).success(function (data) {
-        $scope.show = data;
-        $state.go('details.season', { season_number: 1 }, { location: false });
-    });
-
-    $scope.followedShow = _.find(Follow.getFollowedShowsId(), function (id) { return id == $scope.id });
+    $scope.show = show.data;
+    $scope.followedShow = followedShow.data;
+    $state.go('details.season', { season_number: $scope.followedShow.season ? $scope.followedShow.season : 1 }, { location: false });
 
     // Public function
     $scope.getPosterSrc = function (posterPath) {
@@ -15,13 +11,13 @@ function ($scope, $state, $stateParams, Shows, Follow, toastr, _) {
     };
 
     $scope.followShow = function () {        
-        Follow.followShow($scope.id).then(function (fs) {
+        Follow.followShow($scope.show.id).then(function (fs) {
             $scope.followedShow = fs;
         });        
     };
 
     $scope.unfollowShow = function () {
-        Follow.unfollowShow($scope.id);
+        Follow.unfollowShow($scope.show.id);
         $scope.followedShow = undefined;
     };
 
@@ -33,12 +29,12 @@ function ($scope, $state, $stateParams, Shows, Follow, toastr, _) {
 tvSeriesTrackerApp.controller('DetailsSeasonCtrl', ['$scope', '$stateParams', 'Shows', 'Follow',
 function ($scope, $stateParams, Shows, Follow) {
 
-    Shows.getSeasonDetails($scope.id, $stateParams.season_number).success(function (data) {
+    Shows.getSeasonDetails($stateParams.id, $stateParams.season_number).success(function (data) {
         $scope.season = data;
     });
 
     $scope.setProgression = function (season, episode) {
-        Follow.setLastWatchedEpisode($scope.$parent.id, season, episode);
+        Follow.setLastWatchedEpisode($stateParams.id, season, episode);
     };
 
     $scope.isEpisodeWatched = function (season, episode) {

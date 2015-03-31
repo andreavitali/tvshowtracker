@@ -43,6 +43,7 @@ app.get('/api/shows/:id(\\d+)', routes.shows.getById); // show details
 app.get('/api/shows/:id(\\d+)/season/:number', routes.shows.getSeasonDetails); // season details
 
 app.get('/api/followed', routes.auth.ensureAuthenticated, routes.followed.getFollowedShows); // get all followed shows (update once a day. cache on client?)
+app.get('/api/followed/:id', routes.auth.ensureAuthenticated, routes.followed.getFollowedShow); // get all followed shows (update once a day. cache on client?)
 app.post('/api/followed/:id', routes.auth.ensureAuthenticated, routes.followed.followShow); // follow a new show
 app.delete('/api/followed/:id', routes.auth.ensureAuthenticated, routes.followed.unfollowShow); // unfollow a show
 app.put('/api/followed/:id/:season/:episode', routes.auth.ensureAuthenticated, routes.followed.setLastWatchedEpisode); // set last watched episode

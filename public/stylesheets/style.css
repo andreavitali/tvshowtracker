@@ -195,6 +195,7 @@ ul.note li {
             bottom: 0;
             right: 0;
             color: white;
+            cursor: pointer;
         }
 
             .show-card > .show-thumbnail > .overlay a .glyphicon {

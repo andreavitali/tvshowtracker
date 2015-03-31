@@ -10,8 +10,8 @@
     </tr>
   </thead>
   <tbody class="small">
-    <!--<tr ng-repeat="ep in season.episodes" class="episode-details" ng-class="isNextToWatchEpisode(season.season_number, ep.episode_number) ? 'active' : ''">-->
-    <tr ng-repeat="ep in season.episodes" class="episode-details">
+    <tr ng-repeat="ep in season.episodes" class="episode-details" ng-class="{'active': isNextToWatchEpisode(season.season_number, ep.episode_number)}">
+    <!--<tr ng-repeat="ep in season.episodes" class="episode-details">-->
       <td>
         <strong>{{season.season_number}}x{{ep.episode_number | padding:'0':2}}</strong>
         <br />
@@ -21,11 +21,11 @@
       <td class="text-center">
         {{ep.air_date | date }}
       </td>
-      <td ng-show="followedShow" class="episode-actions text-center">
-        <a ng-click="setProgression(season.season_number, ep.episode_number)">
-          <span class="text-muted glyphicon glyphicon-eye-open" ng-class="isEpisodeWatched(season.season_number, ep.episode_number) ? 'watched' : ''"></span>
-        </a>
-      </td>
+      <!--<td ng-show="followedShow" class="episode-actions text-center">-->
+      <!--  <a ng-click="setProgression(season.season_number, ep.episode_number)">-->
+      <!--    <span class="text-muted glyphicon glyphicon-eye-open" ng-class="isEpisodeWatched(season.season_number, ep.episode_number) ? 'watched' : ''"></span>-->
+      <!--  </a>-->
+      <!--</td>-->
     </tr>
   </tbody>
 </table>

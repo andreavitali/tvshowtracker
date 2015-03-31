@@ -57,7 +57,7 @@
             <button type="button" class="btn btn-default btn-block btn-xs" ng-click="getAllEpisodeForProgression(fs)">Set progression</button>
             <button type="button" class="btn btn-danger btn-block btn-xs" ng-click="unfollowShow(fs)">Unfollow</button>
           </div>
-          <a ui-sref="details({ id: fs.show._id })">
+          <a ng-click="goToDetails(fs)">
             <span class="glyphicon glyphicon-search"></span>
           </a>
         </div>

@@ -1,5 +1,5 @@
-tvSeriesTrackerApp.controller('FollowedCtrl', ['$scope', '$state', 'Shows', 'Follow', '_', 'moment', 'genres', 'followedShows', '$animate',
-function ($scope, $state, Shows, Follow, _, moment, genres, followedShows, $animate) {
+tvSeriesTrackerApp.controller('FollowedCtrl', ['$scope', '$state', 'Shows', 'Follow', '_', 'moment', 'genres', 'followedShows', '$animate','$window',
+function ($scope, $state, Shows, Follow, _, moment, genres, followedShows, $animate,$window) {
 
     // Init data
     $scope.genres = genres;
@@ -23,6 +23,11 @@ function ($scope, $state, Shows, Follow, _, moment, genres, followedShows, $anim
     $scope.getPosterSrc = function (posterPath) {
         return Shows.getPosterUrl(posterPath);
     };
+    
+    $scope.goToDetails = function(fs) {
+        $window.localStorage.currentShow = JSON.stringify(fs);
+        $state.go('details', {id:fs.show._id});
+    }
 
     $scope.unfollowShow = function (fs) {
         Follow.unfollowShow(fs.show._id); // server-side
